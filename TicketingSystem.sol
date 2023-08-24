@@ -40,6 +40,11 @@ contract NestedStructs {
         task.status = TaskStatus.Pending;
         task.assignee = Assignee(assigneeAddress, assigneeName);
     }
+
+    // Function to update the status of a task in a project
+    function updateTaskStatus(uint256 projectId, uint256 taskId, TaskStatus status) public {
+        projects[projectId].tasks[taskId].status = status;
+    }
     
     
 }
