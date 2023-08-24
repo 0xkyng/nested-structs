@@ -31,6 +31,15 @@ contract NestedStructs {
     
     // Mapping of project IDs to Project structs
     mapping(uint256 => Project) projects;
+
+    // Function to add a new task to a project
+    function createProject(uint256 projectId, uint256 taskId, string memory description, address assigneeAddress, string memory assigneeName) public {
+        Project storage project = projects[projectId];
+        Task storage task = project.tasks[taskId];
+        task.description = description;
+        task.status = TaskStatus.Pending;
+        task.assignee = Assignee(assigneeAddress, assigneeName);
+    }
     
     
 }
