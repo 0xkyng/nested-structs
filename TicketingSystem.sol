@@ -45,6 +45,13 @@ contract NestedStructs {
     function updateTaskStatus(uint256 projectId, uint256 taskId, TaskStatus status) public {
         projects[projectId].tasks[taskId].status = status;
     }
+
+     
+    // Function to retrieve information about a task in a project
+    function getTaskInfo(uint256 projectId, uint256 taskId) public view returns (string memory description, TaskStatus status, address assigneeAddress, string memory assigneeName) {
+        Task storage task = projects[projectId].tasks[taskId];
+        return (task.description, task.status, task.assignee.assigneeAddress, task.assignee.name);
+    }
     
     
 }
