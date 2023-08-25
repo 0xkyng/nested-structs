@@ -2,56 +2,67 @@
 pragma solidity ^0.8.0;
 
 contract NestedStructs {
-    
-    // Enumeration to represent the status of a task
-    enum TaskStatus { 
-        Pending, 
-        InProgress, 
-        Completed 
-        }
-    
-    // Struct representing information about a task assignee
-    struct Assignee {
-        address assigneeAddress;
+
+    // Primary struct
+    struct Project{
         string name;
+        TaskStatus status;
+        Task task;
     }
-    
-    // Struct representing information about a task
+
+    enum TaskStatus {
+        Uncompleted,
+        Completed,
+        Unasigned
+    }
+
+
     struct Task {
         string description;
-        TaskStatus status;
-        Assignee assignee;
+        bool IsAsigned;
+        mapping (address => Asignee) addressToAsignee;
     }
-    
-    // Struct representing information about a project
-    struct Project {
+
+    struct Asignee {
         string name;
-        mapping(uint256 => Task) tasks; // Mapping of task IDs to Task structs
-    }
+        uint numbOfTask;
     
-    // Mapping of project IDs to Project structs
-    mapping(uint256 => Project) projects;
-
-    // Function to add a new task to a project
-    function createProject(uint256 projectId, uint256 taskId, string memory description, address assigneeAddress, string memory assigneeName) public {
-        Project storage project = projects[projectId];
-        Task storage task = project.tasks[taskId];
-        task.description = description;
-        task.status = TaskStatus.Pending;
-        task.assignee = Assignee(assigneeAddress, assigneeName);
     }
 
-    // Function to update the status of a task in a project
-    function updateTaskStatus(uint256 projectId, uint256 taskId, TaskStatus status) public {
-        projects[projectId].tasks[taskId].status = status;
+    mapping (address => Project) projects;
+
+    function createProject(
+        string memory _projectName, 
+        TaskStatus _status, 
+        string memory _desc, 
+        bool _true, 
+        string memory asigname,
+        uint _numTask ) public {
+        Project storage newProject = projects[msg.sender];
+        newProject.name = _projectName;
+        newProject.status = _status;
+        newProject.task.description = _desc;
+        newProject.task.IsAsigned = _true;
+        newProject.task.addressToAsignee[msg.sender].name = asigname;
+        newProject.task.addressToAsignee[msg.sender].numbOfTask =_numTask;
     }
 
-     
-    // Function to retrieve information about a task in a project
-    function getTaskInfo(uint256 projectId, uint256 taskId) public view returns (string memory description, TaskStatus status, address assigneeAddress, string memory assigneeName) {
-        Task storage task = projects[projectId].tasks[taskId];
-        return (task.description, task.status, task.assignee.assigneeAddress, task.assignee.name);
+    function asigneeName() public view returns (string memory _name) {
+        Project storage newProject = projects[msg.sender];
+        _name = newProject.task.addressToAsignee[msg.sender].name;
+        // _numTask = newProject.task.addressToAsignee[msg.sender].numbOfTask;
     }
+ 
+
+
+
+
+    
+    
+    
+   
+
+
     
     
 }
